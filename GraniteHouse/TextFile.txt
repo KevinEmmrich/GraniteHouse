@@ -1,0 +1,38 @@
+﻿Note:  after creating MVC with authentication, change defaultConnection in appsettings.json.  
+The database is not built until you Start/Run the project for the first time!
+
+**s Note for the Product Types section.
+
+
+
+
+
+
+
+
+** steps taken in creating Special Tags option
+
+Data / Model
+1.)  Create model for SpecialTags
+2.)  Add SpecialTags  to GrainteHouseUI.Data.ApplicationDbContext.cs  ( public DbSet<SpecialTags> SpecialTags { get; set; } )
+3.)  Package Manager Console:  add-migration AddSpecialTags
+4.)  Package Manager Console:  update-database
+5.)  check sql database
+
+Front Menu
+1.) add Special Tags menu item to _Layout.cshtml
+ <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tags</a></li>
+ 
+
+Controller
+1.) Add new controller under Areas --> Admin:  SpecialTagsController, went with the read/write template
+2.) Add this [Area("Admin")] to the main class, gotta let it know we are using areas.
+3.) Added the injection line as first line main class: private readonly ApplicationDbContext _db;
+4.) Create constructor to grab  ApplicationDbContext _db
+5.) Update Index method ==> return View(_db.SpecialTags.ToList());
+
+Create Index View
+1.)  Create index view -->  (make sure you don't overwrite an existing one!!!!!!!!!!!!!!!)
+2.)  I did so I had to copy from instructir github.  Decided to move my own project
+to github and that took quite a while!!!!
+3.)  Pretty much copying the instructors controller methods and views and adjusting for SpecialTags
