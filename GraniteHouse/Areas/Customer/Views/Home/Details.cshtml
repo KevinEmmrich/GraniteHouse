@@ -1,0 +1,133 @@
+﻿@model GraniteHouse.Models.Products
+@using GraniteHouse.Extensions
+@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+
+<br />
+<h2 class="text-info">Product Details</h2>
+
+<form method="post">
+    <div class="p-4 border rounded row">
+
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Name"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Name" readonly="readonly" class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Description"></label>
+                </div>
+                <div class="col-8">
+                    <textarea rows="4" asp-for="Description" readonly="readonly" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="ShadeColor"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ShadeColor" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="ShadeColor" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Price"></label>
+                </div>
+                <div class="col-8">
+                    @String.Format("{0:c}", Model.Price)/sq.ft
+                    @*<input asp-for="Price" readonly="readonly" class="form-control" />*@
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="ProductTypes"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ProductTypes.Name" readonly="readonly" class="form-control" />
+                </div>
+            </div>
+            @if (!Model.SpecialTags.Name.Equals("--None--"))
+            {
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="SpecialTags"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SpecialTags.Name" readonly="readonly" class="form-control" />
+                    </div>
+                </div>
+            }
+
+            <div class="form-group row">
+                <div class="col-4">
+
+                </div>
+                <div class="col-8">
+
+                    @{
+                        bool isInBag = false;
+                        List<int> lstCart = HttpContextAccessor.HttpContext.Session.Get<List<int>>("ssShoppingCart");
+                        if (lstCart != null && lstCart.Contains(Model.Id))
+                        {
+                            isInBag = true;
+                        }
+                    }
+                    @if (isInBag)
+                    {
+                        <button type="submit" value="Remove From Cart" asp-action="Remove" asp-route-id="@Model.Id"
+                                class="btn btn-danger form-control">
+                            Remove From Cart...
+                        </button>
+                    }
+                    else
+                    {
+                        @if (Model.Available)
+                        {
+                            <input hidden asp-for="Id" />
+                            <button type="submit" value="Add to Cart" asp-route-id="@Model.Id"
+                                    class="btn btn-primary form-control">
+                                Add To Cart...
+                            </button>
+                        }
+                    }
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-1">
+        </div>
+        <div class="col-3">
+            <img src="@Model.image" style="border-radius:5px; border:1px solid #bbb9b9; width:100%;" />
+            <br /><br />
+            @if (Model.Available)
+            {
+                <img src="~/images/inStock.png" style="width:50%" />
+            }
+            else
+            {
+                <img src="~/images/sold-out.png" style="width:50%" />
+            }
+        </div>
+
+
+        <br />
+        <div class="form-group">
+            <input hidden asp-for="Id" />
+            <a asp-action="Index" class="btn btn-success">Back to List</a>
+        </div>
+    </div>
+</form>
+
