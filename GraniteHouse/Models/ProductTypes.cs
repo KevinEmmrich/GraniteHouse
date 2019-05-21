@@ -11,6 +11,7 @@ namespace GraniteHouse.Models
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Product Type")]
         public string Name { get; set; }
     }
 }

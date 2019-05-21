@@ -1,0 +1,185 @@
+﻿@model GraniteHouse.Models.ViewModel.ShoppingCartViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<form method="post">
+    @*can't seem to validate here.  If we remove item the validation kicks in forcing us to add customer info before deleting!'*@
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <br /> <br />
+    <h2 class="text-info">Your Shopping Cart</h2>
+    <br />
+    @if (Model.Products.Count > 0)
+    {
+        <div class="container border boreder-secondary rounded" style="padding:15px;">
+            <div class="row">
+
+                <div class="col-8" style="border-right:1px solid #bbb9b9;">
+                    <table class="table table-striped" style="width:100%">
+                        <tr class="table-info">
+                            <th style="text-align:center; width:20%;"></th>
+
+                            <th style="text-align:center; ">
+                                <label asp-for="@Model.Products.FirstOrDefault().Name"></label>
+                            </th>
+                            <th style="text-align:center; ">
+                                <label asp-for="@Model.Products.FirstOrDefault().Description"></label>
+                            </th>
+                            <th style="text-align:center; ">
+                                @*<label asp-for="@Model.Products.FirstOrDefault().Price"></label>*@
+                                <label asp-for="@Model.Products.FirstOrDefault().Price"></label>
+
+                            </th>
+                            <th style="text-align:center; ">
+                                <label asp-for="@Model.Products.FirstOrDefault().ShadeColor"></label>
+                            </th>
+                            <th style="text-align:center; ">
+                                <label asp-for="@Model.Products.FirstOrDefault().ProductTypes.Name"></label>
+                            </th>
+
+                            <th style="text-align:center; "></th>
+                        </tr>
+                        @foreach (var item in Model.Products)
+                        {
+                            <tr padding:50px>
+                                <td>
+                                    <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id">
+                                        <img src="@item.image" style="width:100%; margin:auto; display:block;
+                                                               border-radius:5px; border:1px solid  #bbb9b9; " />
+                                    </a>
+                                </td>
+                                <td style="text-align:center;">
+                                    @Html.DisplayFor(i => item.Name)
+                                </td>
+                                <td style="text-align:center; ">
+                                    @Html.DisplayFor(i => item.Description)
+                                </td>
+                                <td style="text-align:center; ">
+                                    $@Html.DisplayFor(i => item.Price)
+                                </td>
+                                <td style="text-align:center; ">
+                                    @Html.DisplayFor(i => item.ShadeColor)
+                                </td>
+                                <td style="text-align:center; ">
+                                    @Html.DisplayFor(i => item.ProductTypes.Name)
+                                </td>
+                                <td style="text-align:center; ">
+                                    <button type="submit" class="btn btn-danger" asp-action="Remove" asp-route-id="@item.Id">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+                </div> @*col-8*@
+
+                <div class="col-4" style="padding-left:30px;">
+                    <div class="h4" style="padding-bottom:15px;">Appointment Information</div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="@Model.Appointments.CustomerName"></label>
+                            @*<label>Customer Name: </label>*@
+                        </div>
+                        <div class="col-12" style="padding-bottom:15px">
+                            <input asp-for="@Model.Appointments.CustomerName" class="form-control" />
+                            <span asp-validation-for="@Model.Appointments.CustomerName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            @*<label>Email: </label>*@
+                            <label asp-for="@Model.Appointments.CustomerEmail"></label>
+                        </div>
+                        <div class="col-12" style="padding-bottom:15px">
+                            <input asp-for="@Model.Appointments.CustomerEmail" class="form-control" />
+                            <span asp-validation-for="@Model.Appointments.CustomerEmail" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label>Phone Number: </label>
+                            @*<label asp-for="@Model.Appointments.CustomerPhoneNumber"></label>*@
+                        </div>
+
+                        <div class="col-12" style="padding-bottom:15px">
+                            <input asp-for="@Model.Appointments.CustomerPhoneNumber" class="form-control" />
+                            <span asp-validation-for="@Model.Appointments.CustomerPhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            @*<label>Appointment Date : </label>*@
+                            <label asp-for="@Model.Appointments.AppointmentDate"></label>
+
+                        </div>
+
+                        <div class="col-12" style="padding-bottom:15px">
+                            @*id=datepicker aligns with the js function #datepicker below*@
+                            <input asp-for="@Model.Appointments.AppointmentDate" value="" type="text" id="datepicker" class="form-control" />
+                            <span asp-validation-for="@Model.Appointments.AppointmentDate" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="col-12">
+                            @*<label>Appointment Time : </label>*@
+                            <label asp-for="@Model.Appointments.AppointmentTime"></label>
+                        </div>
+
+                        <div class="col-12" style="padding-bottom:15px">
+                            @*class=timepicker aligns with .timepicker below in js section.*@
+                            <input asp-for="@Model.Appointments.AppointmentTime" value="" type="text" class="timepicker form-control" />
+                            <span asp-validation-for="@Model.Appointments.AppointmentTime" class="text-danger"></span>
+
+                        </div>
+                        <br /> <br />
+                        <div class="col-12" style="padding-bottom:15px">
+                            <label asp-for="@Model.Appointments.IsConfirmed"></label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input asp-for="@Model.Appointments.IsConfirmed" />
+                        </div>
+                        <div class="col-12 text-center">
+                            <button type="submit" id="btnPlaceOrder" class="btn btn-success">Schedule Appointment</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>  @*end row*@
+        </div> @*// container*@
+    }
+
+    else
+    {
+        <div class="h2">** Please add items to the shopping cart first! **</div>
+    }
+
+
+
+</form>
+
+@section Scripts{
+    @*@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+    <script>
+        $('.timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 30,
+            minTime: '10',
+            maxTime: '3:00pm',
+            startTime: '10:00',
+            dynamic: true,
+            dropdown: true,
+            scrollbar: true
+        });
+
+        $(function () {
+            $("#datepicker").datepicker({ minDate: +1, maxDate: "+3M" })
+        });
+    </script>
+
+    @*<script>
+            $(document).ready(function () {
+                $('input.timepicker').timepicker({});
+            });
+        </script>*@
+
+}
