@@ -23,7 +23,7 @@ namespace GraniteHouse.Data
         public DbSet<ProductsSelectedForAppointment> ProductsSelectedForAppointment { get; set; }
 
         // extending Identity User
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
 
     }

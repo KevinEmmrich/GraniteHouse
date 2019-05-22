@@ -1,0 +1,62 @@
+﻿@model GraniteHouse.Models.ApplicationUser
+@using GraniteHouse.Extensions
+
+
+<br />
+<h2 class="text-info">DisableUser</h2>
+
+<form method="post">
+    <div class="p-4 border rounded row">
+        <input hidden asp-for="Id" />
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Name"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Name" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Email"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Email" readonly class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="PhoneNumber"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="PhoneNumber" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="LockoutEnd"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="LockoutEnd" readonly class="form-control" />
+                </div>
+            </div>
+           
+        </div>
+        <div class="col-1">
+
+        </div>
+        <div class="col-3">
+           
+        </div>
+
+
+        <br />
+        <div class="form-group">
+            <input type="submit" class="btn btn-danger" value="Confirm Delete" />
+            <a asp-action="Index" class="btn btn-success">Back to List</a>
+        </div>
+    </div>
+</form>
+
