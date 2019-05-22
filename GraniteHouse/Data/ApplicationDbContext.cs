@@ -21,5 +21,10 @@ namespace GraniteHouse.Data
         // Appointments
         public DbSet<Appointments> Appointments { get; set; }
         public DbSet<ProductsSelectedForAppointment> ProductsSelectedForAppointment { get; set; }
+
+        // extending Identity User
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+
     }
 }
