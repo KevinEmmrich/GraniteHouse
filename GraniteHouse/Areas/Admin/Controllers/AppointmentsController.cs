@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using GraniteHouse.Data;
 using GraniteHouse.Models;
@@ -18,13 +19,14 @@ namespace GraniteHouse.Areas.Admin.Controllers
     public class AppointmentsController : Controller
     {
         private readonly ApplicationDbContext _db;
+        //private int PageSize = 3;  // should be in SD.PageSize
 
         public AppointmentsController(ApplicationDbContext db)
         {
             _db = db;
         }
 
-        public async Task<IActionResult> Index(string searchName = null, string searchEmail = null, string searchPhone = null, string searchDate = null)
+        public async Task<IActionResult> Index(int productPage=1,string searchName = null, string searchEmail = null, string searchPhone = null, string searchDate = null)
         {
             // need login info to know who it is since we are letting admin and superAdmin in. (admin can only see their own appointments)
             // mvc can use GetUserIdentity()
@@ -36,6 +38,36 @@ namespace GraniteHouse.Areas.Admin.Controllers
             {
                 Appointments = new List<Models.Appointments>()
             };
+
+            //build url for pagination
+            StringBuilder param = new StringBuilder();
+            // swapping out ":" for "pageNumber" (i from PageLinkTagHelper.cs) 
+            param.Append("/Admin/Appointments?productPage=:");
+
+            param.Append("&searchName=");
+            if (searchName != null)
+            {
+                param.Append(searchName);
+            }
+
+            param.Append("&searchEmail=");
+            if (searchEmail != null)
+            {
+                param.Append(searchEmail);
+            }
+
+            param.Append("&searchPhone=");
+            if (searchPhone != null)
+            {
+                param.Append(searchPhone);
+            }
+
+            param.Append("&searchDate=");
+            if (searchDate != null)
+            {
+               param.Append(searchDate);
+            }
+
 
             appointmentVM.Appointments = await _db.Appointments.Include(a => a.SalesPerson).ToListAsync();
             if (User.IsInRole(SD.AdminEndUser))
@@ -71,6 +103,20 @@ namespace GraniteHouse.Areas.Admin.Controllers
 
             }
             // **** end search section
+
+            var count = appointmentVM.Appointments.Count;
+            // skip 0 for page 1, 3 for page 2 ...  Take the next 3 items for current page.
+            appointmentVM.Appointments = appointmentVM.Appointments.OrderBy(p => p.AppointmentDate)
+                .Skip((productPage - 1) * SD.PageSize)
+                .Take(SD.PageSize).ToList();
+
+            appointmentVM.PagingInfo = new PagingInfo
+            {
+                CurrentPage = productPage,
+                ItemsPerPage = SD.PageSize,
+                TotalItems = count,
+                urlParam = param.ToString()
+            };
 
             return View(appointmentVM);
         }
